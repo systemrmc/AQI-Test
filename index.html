@@ -2,60 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AQI Dashboard - Mumbai</title>
+    <title>Office & Mumbai AQI Dashboard</title>
     <style>
         :root {
-            --bg: #0a0e14; --card: #161b22; --accent: #58a6ff;
+            --bg: #05070a; --card: #12161f; --accent: #00d2ff;
             --good: #4ade80; --mod: #facc15; --poor: #fb923c; --bad: #f87171;
         }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
-        .container { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 150px 1fr 1fr; height: 100vh; gap: 20px; padding: 20px; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 20px; box-sizing: border-box; overflow: hidden; }
+        .container { display: grid; grid-template-rows: 140px 1fr 180px; height: 95vh; gap: 20px; }
         
-        /* Header */
-        .header { grid-column: span 2; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--card); padding: 0 40px; }
-        #clock { font-size: 4em; font-weight: bold; }
-        #date { font-size: 1.5em; color: #8b949e; }
+        /* Header & Outside Weather */
+        .header { display: grid; grid-template-columns: 1fr 1.5fr 1fr; align-items: center; border-bottom: 1px solid #232936; padding: 10px 20px; background: #0a0e14; border-radius: 15px; }
+        #clock { font-size: 3.5em; font-weight: bold; color: var(--accent); text-align: right; }
+        #date { font-size: 1.2em; color: #8b949e; }
+        
+        .outside-weather { display: flex; align-items: center; justify-content: center; gap: 30px; border-left: 1px solid #232936; border-right: 1px solid #232936; height: 80%; }
+        .ext-item { text-align: center; }
+        .ext-label { font-size: 0.7em; color: #8b949e; text-transform: uppercase; display: block; }
+        .ext-val { font-size: 1.8em; font-weight: bold; }
 
-        /* Cards */
-        .card { background: var(--card); border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border: 1px solid #30363d; }
-        .label { font-size: 1.5em; color: #8b949e; text-transform: uppercase; letter-spacing: 2px; }
-        .aqi-val { font-size: 8em; font-weight: 900; margin: 10px 0; }
-        .sub-data { font-size: 1.2em; color: #8b949e; }
-        
-        /* Weather Strip */
-        .weather-summary { grid-column: span 2; background: linear-gradient(90deg, #161b22, #1f2937); display: flex; justify-content: space-around; align-items: center; border-radius: 20px; font-size: 2em; }
-        
-        .alert-text { color: var(--bad); font-weight: bold; font-size: 0.8em; margin-top: 5px; display: none; }
+        /* Main Display (Indoor) */
+        .main-display { background: var(--card); border-radius: 30px; border: 1px solid #232936; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .label-main { font-size: 1.8em; color: #8b949e; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 5px; }
+        .aqi-val { font-size: 11em; font-weight: 900; line-height: 1; transition: color 0.5s ease; }
+        .aqi-unit { font-size: 0.15em; color: #555; margin-left: 10px; }
+        .aqi-status { font-size: 2.2em; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+
+        /* Bottom Sensor Grid */
+        .sensor-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .mini-card { background: var(--card); border-radius: 20px; border: 2px solid #232936; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .mini-label { font-size: 0.9em; color: #8b949e; text-transform: uppercase; margin-bottom: 5px; }
+        .mini-val { font-size: 2.5em; font-weight: bold; }
+        .mini-unit { font-size: 0.4em; color: #8b949e; margin-left: 4px; }
+
+        /* Color classes */
+        .border-good { border-color: var(--good); }
+        .border-mod { border-color: var(--mod); }
+        .border-bad { border-color: var(--bad); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div id="date">Loading Date...</div>
-        <div id="location">MUMBAI, MH</div>
+        <div id="date">Loading...</div>
+        
+        <div class="outside-weather">
+            <div class="ext-item">
+                <span class="ext-label">Mumbai AQI</span>
+                <span class="ext-val" id="out-aqi">--</span>
+            </div>
+            <div class="ext-item">
+                <span class="ext-label">Outside Temp</span>
+                <span class="ext-val" id="out-temp">--°C</span>
+            </div>
+            <div class="ext-item">
+                <span class="ext-label">Sky Condition</span>
+                <span class="ext-val" id="out-cond">--</span>
+            </div>
+        </div>
+
         <div id="clock">00:00:00</div>
     </div>
 
-    <div class="card" id="indoor-card">
-        <div class="label">Inside Office</div>
-        <div class="aqi-val" id="in-aqi">--</div>
-        <div class="sub-data">
-            PM2.5: <span id="in-pm">--</span> µg/m³ | CO2: <span id="in-co2">--</span> ppm
-            <div id="co2-warn" class="alert-text">⚠️ HIGH CO2 - VENTILATE</div>
+    <div class="main-display">
+        <div class="label-main">Office Air Quality</div>
+        <div class="aqi-val" id="in-aqi">--<span class="aqi-unit">AQI</span></div>
+        <div class="aqi-status" id="in-status">CONNECTING...</div>
+    </div>
+
+    <div class="sensor-grid">
+        <div class="mini-card" id="card-pm25">
+            <span class="mini-label">Inside PM2.5</span>
+            <span class="mini-val" id="val-pm25">--</span>
+            <span class="mini-unit">µg/m³</span>
         </div>
-    </div>
-
-    <div class="card" id="outdoor-card">
-        <div class="label">Mumbai Outside</div>
-        <div class="aqi-val" id="out-aqi">--</div>
-        <div class="sub-data" id="out-desc">Fetching Outdoor AQI...</div>
-    </div>
-
-    <div class="weather-summary">
-        <div id="temp">Temp: --°C</div>
-        <div id="condition">Condition: --</div>
-        <div id="humid">Humidity: --%</div>
+        <div class="mini-card" id="card-pm10">
+            <span class="mini-label">Inside PM10</span>
+            <span class="mini-val" id="val-pm10">--</span>
+            <span class="mini-unit">µg/m³</span>
+        </div>
+        <div class="mini-card" id="card-temp">
+            <span class="mini-label">Inside Temp</span>
+            <span class="mini-val" id="val-temp">--</span>
+            <span class="mini-unit">°C</span>
+        </div>
+        <div class="mini-card" id="card-humid">
+            <span class="mini-label">Inside Humid</span>
+            <span class="mini-val" id="val-humid">--</span>
+            <span class="mini-unit">%</span>
+        </div>
     </div>
 </div>
 
@@ -63,67 +99,73 @@
     const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
     const K_UDID = '796ebfee-564a-4361-b7d1-90f86c9297ed';
     const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
-    const LAT = "19.0760", LON = "72.8777";
+    const LAT = "19.0000", LON = "72.8200"; // Coordinates for Lower Parel Area
 
     function calcAQI(pm) {
-        if (pm <= 30) return Math.round(pm * 50 / 30);
-        if (pm <= 60) return Math.round(50 + (pm - 30) * 50 / 30);
-        if (pm <= 90) return Math.round(100 + (pm - 60) * 100 / 30);
-        return Math.round(200 + (pm - 90) * 100 / 30); 
+        if (pm <= 30) return { val: Math.round(pm * 50 / 30), status: "Good", color: "#4ade80" };
+        if (pm <= 60) return { val: Math.round(50 + (pm - 30) * 50 / 30), status: "Satisfactory", color: "#facc15" };
+        if (pm <= 90) return { val: Math.round(100 + (pm - 60) * 100 / 30), status: "Moderate", color: "#fb923c" };
+        if (pm <= 120) return { val: Math.round(200 + (pm - 90) * 100 / 30), status: "Poor", color: "#f87171" };
+        return { val: 301, status: "Very Poor", color: "#b91c1c" };
     }
 
-    function getColor(aqi) {
-        if (aqi <= 50) return "#4ade80";
-        if (aqi <= 100) return "#facc15";
-        return "#f87171";
+    function updateCardStyle(id, value, type) {
+        const card = document.getElementById(id);
+        card.classList.remove('border-good', 'border-mod', 'border-bad');
+        if (type === 'pm25' && value > 60) card.classList.add('border-bad');
+        else if (type === 'pm10' && value > 100) card.classList.add('border-bad');
+        else card.classList.add('border-good');
     }
 
     async function updateData() {
-        // 1. Updated Kaiterra Fetch
+        // 1. INDOOR DATA (Kaiterra)
         try {
             const res = await fetch(`https://api.kaiterra.com/v1/devices/${K_UDID}/top?key=${K_KEY}`);
             const json = await res.json();
+            const data = json.data;
+
+            const pm25 = Math.round(data.find(d => d.param === 'rpm25c').points[0].value);
+            const pm10 = Math.round(data.find(d => d.param === 'rpm10c').points[0].value);
+            const temp = data.find(d => d.param === 'rtemp').points[0].value.toFixed(1);
+            const humid = Math.round(data.find(d => d.param === 'rhumid').points[0].value);
+
+            const aqiData = calcAQI(pm25);
+            document.getElementById('in-aqi').innerHTML = `${aqiData.val}<span class="aqi-unit">AQI</span>`;
+            document.getElementById('in-aqi').style.color = aqiData.color;
+            document.getElementById('in-status').innerText = aqiData.status;
+            document.getElementById('in-status').style.color = aqiData.color;
+
+            document.getElementById('val-pm25').innerText = pm25;
+            document.getElementById('val-pm10').innerText = pm10;
+            document.getElementById('val-temp').innerText = temp;
+            document.getElementById('val-humid').innerText = humid;
             
-            // Accessing the 'data' array from your JSON response
-            const pmData = json.data.find(d => d.param === 'rpm25c');
-            const co2Data = json.data.find(d => d.param === 'rco2');
-            
-            const pm = pmData.points[0].value;
-            const co2 = co2Data.points[0].value;
-            const aqi = calcAQI(pm);
+            updateCardStyle('card-pm25', pm25, 'pm25');
+            updateCardStyle('card-pm10', pm10, 'pm10');
+        } catch (e) { console.error("Kaiterra Error"); }
 
-            document.getElementById('in-aqi').innerText = aqi;
-            document.getElementById('in-aqi').style.color = getColor(aqi);
-            document.getElementById('in-pm').innerText = Math.round(pm);
-            document.getElementById('in-co2').innerText = Math.round(co2);
-
-            // Toggle CO2 Warning
-            document.getElementById('co2-warn').style.display = (co2 > 1200) ? 'block' : 'none';
-
-        } catch (e) { console.error("Kaiterra Fetch Error:", e); }
-
-        // 2. Outdoor (OpenWeather)
+        // 2. OUTDOOR DATA (OpenWeather)
         try {
             const wRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&appid=${W_KEY}`);
             const wData = await wRes.json();
-            document.getElementById('temp').innerText = `Temp: ${Math.round(wData.main.temp)}°C`;
-            document.getElementById('condition').innerText = wData.weather[0].main;
-            document.getElementById('humid').innerText = `Humidity: ${wData.main.humidity}%`;
+            document.getElementById('out-temp').innerText = Math.round(wData.main.temp) + "°C";
+            document.getElementById('out-cond').innerText = wData.weather[0].main;
 
             const aRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
             const aData = await aRes.json();
-            const outAqiRaw = aData.list[0].main.aqi;
-            const outAqiMap = ["-", "Good", "Fair", "Moderate", "Poor", "Very Poor"];
-            document.getElementById('out-aqi').innerText = outAqiRaw * 25; // Adjusted scaling
-            document.getElementById('out-aqi').style.color = getColor(outAqiRaw * 25);
-            document.getElementById('out-desc').innerText = "Status: " + outAqiMap[outAqiRaw];
-        } catch (e) { console.error("Weather Fetch Error:", e); }
+            const outAqi = aData.list[0].main.aqi; // 1 to 5 scale
+            const aqiMap = ["-", "50", "100", "150", "200", "300"]; // Simple mapping for display
+            document.getElementById('out-aqi').innerText = aqiMap[outAqi];
+            
+            const colors = ["#fff", "#4ade80", "#facc15", "#fb923c", "#f87171", "#b91c1c"];
+            document.getElementById('out-aqi').style.color = colors[outAqi];
+        } catch (e) { console.error("Weather Error"); }
     }
 
     function updateClock() {
         const now = new Date();
         document.getElementById('clock').innerText = now.toLocaleTimeString();
-        document.getElementById('date').innerText = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+        document.getElementById('date').innerText = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
     }
 
     setInterval(updateData, 60000);
