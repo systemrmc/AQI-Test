@@ -2,43 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Office & Mumbai AQI Dashboard</title>
+    <title>Mumbai AQI - Indoor vs Outdoor</title>
+    <meta http-equiv="refresh" content="300"> 
     <style>
         :root {
             --bg: #05070a; --card: #12161f; --accent: #00d2ff;
             --good: #4ade80; --mod: #facc15; --poor: #fb923c; --bad: #f87171;
         }
-        body { background: var(--bg); color: white; font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 20px; box-sizing: border-box; overflow: hidden; }
-        .container { display: grid; grid-template-rows: 140px 1fr 180px; height: 95vh; gap: 20px; }
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Inter', 'Segoe UI', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
+        .container { 
+            display: grid; 
+            grid-template-rows: 100px 1fr 180px; 
+            height: 98vh; 
+            gap: 20px; 
+        }
         
-        /* Header & Outside Weather */
-        .header { display: grid; grid-template-columns: 1fr 1.5fr 1fr; align-items: center; border-bottom: 1px solid #232936; padding: 10px 20px; background: #0a0e14; border-radius: 15px; }
-        #clock { font-size: 3.5em; font-weight: bold; color: var(--accent); text-align: right; }
-        #date { font-size: 1.2em; color: #8b949e; }
-        
-        .outside-weather { display: flex; align-items: center; justify-content: center; gap: 30px; border-left: 1px solid #232936; border-right: 1px solid #232936; height: 80%; }
-        .ext-item { text-align: center; }
-        .ext-label { font-size: 0.7em; color: #8b949e; text-transform: uppercase; display: block; }
-        .ext-val { font-size: 1.8em; font-weight: bold; }
+        /* Header */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 20px; 
+        }
+        #clock { font-size: 4em; font-weight: bold; color: var(--accent); }
+        #date { font-size: 2em; color: #8b949e; }
 
-        /* Main Display (Indoor) */
-        .main-display { background: var(--card); border-radius: 30px; border: 1px solid #232936; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .label-main { font-size: 1.8em; color: #8b949e; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 5px; }
-        .aqi-val { font-size: 11em; font-weight: 900; line-height: 1; transition: color 0.5s ease; }
-        .aqi-unit { font-size: 0.15em; color: #555; margin-left: 10px; }
-        .aqi-status { font-size: 2.2em; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+        /* Main Side-by-Side Cards */
+        .main-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 25px; 
+        }
+        .big-card { 
+            background: var(--card); 
+            border-radius: 40px; 
+            border: 2px solid #232936; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+        }
+        .label-main { font-size: 2.2em; color: #8b949e; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
+        .aqi-val { font-size: 12em; font-weight: 900; line-height: 0.9; }
+        .aqi-unit { font-size: 0.25em; color: #8b949e; margin-left: 10px; display: inline-block; vertical-align: middle; }
+        .aqi-status { font-size: 2.5em; font-weight: bold; margin-top: 15px; text-transform: uppercase; }
 
         /* Bottom Sensor Grid */
-        .sensor-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .mini-card { background: var(--card); border-radius: 20px; border: 2px solid #232936; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .mini-label { font-size: 0.9em; color: #8b949e; text-transform: uppercase; margin-bottom: 5px; }
-        .mini-val { font-size: 2.5em; font-weight: bold; }
-        .mini-unit { font-size: 0.4em; color: #8b949e; margin-left: 4px; }
+        .sensor-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+        }
+        .mini-card { 
+            background: var(--card); 
+            border-radius: 25px; 
+            border: 2px solid #232936; 
+            padding: 15px; 
+            text-align: center;
+        }
+        .mini-label { font-size: 1.2em; color: #8b949e; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .mini-val { font-size: 3.5em; font-weight: bold; }
+        .mini-unit { font-size: 0.4em; color: #8b949e; margin-left: 5px; font-weight: normal; }
 
-        /* Color classes */
-        .border-good { border-color: var(--good); }
-        .border-mod { border-color: var(--mod); }
-        .border-bad { border-color: var(--bad); }
+        /* Weather Header Mini-Info */
+        .weather-info { font-size: 1.8em; color: #8b949e; }
     </style>
 </head>
 <body>
@@ -46,51 +82,39 @@
 <div class="container">
     <div class="header">
         <div id="date">Loading...</div>
-        
-        <div class="outside-weather">
-            <div class="ext-item">
-                <span class="ext-label">Mumbai AQI</span>
-                <span class="ext-val" id="out-aqi">--</span>
-            </div>
-            <div class="ext-item">
-                <span class="ext-label">Outside Temp</span>
-                <span class="ext-val" id="out-temp">--°C</span>
-            </div>
-            <div class="ext-item">
-                <span class="ext-label">Sky Condition</span>
-                <span class="ext-val" id="out-cond">--</span>
-            </div>
-        </div>
-
+        <div class="weather-info" id="out-summary">Mumbai: --°C | --</div>
         <div id="clock">00:00:00</div>
     </div>
 
-    <div class="main-display">
-        <div class="label-main">Office Air Quality</div>
-        <div class="aqi-val" id="in-aqi">--<span class="aqi-unit">AQI</span></div>
-        <div class="aqi-status" id="in-status">CONNECTING...</div>
+    <div class="main-grid">
+        <div class="big-card" id="card-in">
+            <div class="label-main">Office Inside</div>
+            <div class="aqi-val" id="in-aqi">--<span class="aqi-unit">AQI</span></div>
+            <div class="aqi-status" id="in-status">---</div>
+        </div>
+        <div class="big-card" id="card-out">
+            <div class="label-main">Mumbai Outside</div>
+            <div class="aqi-val" id="out-aqi">--<span class="aqi-unit">AQI</span></div>
+            <div class="aqi-status" id="out-status">---</div>
+        </div>
     </div>
 
     <div class="sensor-grid">
-        <div class="mini-card" id="card-pm25">
+        <div class="mini-card">
             <span class="mini-label">Inside PM2.5</span>
-            <span class="mini-val" id="val-pm25">--</span>
-            <span class="mini-unit">µg/m³</span>
+            <span class="mini-val" id="val-pm25">--<span class="mini-unit">µg/m³</span></span>
         </div>
-        <div class="mini-card" id="card-pm10">
+        <div class="mini-card">
             <span class="mini-label">Inside PM10</span>
-            <span class="mini-val" id="val-pm10">--</span>
-            <span class="mini-unit">µg/m³</span>
+            <span class="mini-val" id="val-pm10">--<span class="mini-unit">µg/m³</span></span>
         </div>
-        <div class="mini-card" id="card-temp">
+        <div class="mini-card">
             <span class="mini-label">Inside Temp</span>
-            <span class="mini-val" id="val-temp">--</span>
-            <span class="mini-unit">°C</span>
+            <span class="mini-val" id="val-temp">--<span class="mini-unit">°C</span></span>
         </div>
-        <div class="mini-card" id="card-humid">
-            <span class="mini-label">Inside Humid</span>
-            <span class="mini-val" id="val-humid">--</span>
-            <span class="mini-unit">%</span>
+        <div class="mini-card">
+            <span class="mini-label">Inside Humidity</span>
+            <span class="mini-val" id="val-humid">--<span class="mini-unit">%</span></span>
         </div>
     </div>
 </div>
@@ -99,9 +123,9 @@
     const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
     const K_UDID = '796ebfee-564a-4361-b7d1-90f86c9297ed';
     const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
-    const LAT = "19.0000", LON = "72.8200"; // Coordinates for Lower Parel Area
+    const LAT = "19.0000", LON = "72.8200"; 
 
-    function calcAQI(pm) {
+    function getAQIInfo(pm) {
         if (pm <= 30) return { val: Math.round(pm * 50 / 30), status: "Good", color: "#4ade80" };
         if (pm <= 60) return { val: Math.round(50 + (pm - 30) * 50 / 30), status: "Satisfactory", color: "#facc15" };
         if (pm <= 90) return { val: Math.round(100 + (pm - 60) * 100 / 30), status: "Moderate", color: "#fb923c" };
@@ -109,16 +133,8 @@
         return { val: 301, status: "Very Poor", color: "#b91c1c" };
     }
 
-    function updateCardStyle(id, value, type) {
-        const card = document.getElementById(id);
-        card.classList.remove('border-good', 'border-mod', 'border-bad');
-        if (type === 'pm25' && value > 60) card.classList.add('border-bad');
-        else if (type === 'pm10' && value > 100) card.classList.add('border-bad');
-        else card.classList.add('border-good');
-    }
-
     async function updateData() {
-        // 1. INDOOR DATA (Kaiterra)
+        // 1. INDOOR (Kaiterra)
         try {
             const res = await fetch(`https://api.kaiterra.com/v1/devices/${K_UDID}/top?key=${K_KEY}`);
             const json = await res.json();
@@ -129,37 +145,38 @@
             const temp = data.find(d => d.param === 'rtemp').points[0].value.toFixed(1);
             const humid = Math.round(data.find(d => d.param === 'rhumid').points[0].value);
 
-            const aqiData = calcAQI(pm25);
-            document.getElementById('in-aqi').innerHTML = `${aqiData.val}<span class="aqi-unit">AQI</span>`;
-            document.getElementById('in-aqi').style.color = aqiData.color;
-            document.getElementById('in-status').innerText = aqiData.status;
-            document.getElementById('in-status').style.color = aqiData.color;
+            const aqiInfo = getAQIInfo(pm25);
+            document.getElementById('in-aqi').innerHTML = `${aqiInfo.val}<span class="aqi-unit">AQI</span>`;
+            document.getElementById('in-aqi').style.color = aqiInfo.color;
+            document.getElementById('in-status').innerText = aqiInfo.status;
+            document.getElementById('in-status').style.color = aqiInfo.color;
+            document.getElementById('card-in').style.borderColor = aqiInfo.color + "55";
 
-            document.getElementById('val-pm25').innerText = pm25;
-            document.getElementById('val-pm10').innerText = pm10;
-            document.getElementById('val-temp').innerText = temp;
-            document.getElementById('val-humid').innerText = humid;
-            
-            updateCardStyle('card-pm25', pm25, 'pm25');
-            updateCardStyle('card-pm10', pm10, 'pm10');
-        } catch (e) { console.error("Kaiterra Error"); }
+            document.getElementById('val-pm25').innerHTML = `${pm25}<span class="mini-unit">µg/m³</span>`;
+            document.getElementById('val-pm10').innerHTML = `${pm10}<span class="mini-unit">µg/m³</span>`;
+            document.getElementById('val-temp').innerHTML = `${temp}<span class="mini-unit">°C</span>`;
+            document.getElementById('val-humid').innerHTML = `${humid}<span class="mini-unit">%</span>`;
+        } catch (e) { console.error("Indoor Error"); }
 
-        // 2. OUTDOOR DATA (OpenWeather)
+        // 2. OUTDOOR (OpenWeather)
         try {
             const wRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&appid=${W_KEY}`);
             const wData = await wRes.json();
-            document.getElementById('out-temp').innerText = Math.round(wData.main.temp) + "°C";
-            document.getElementById('out-cond').innerText = wData.weather[0].main;
+            document.getElementById('out-summary').innerText = `Mumbai: ${Math.round(wData.main.temp)}°C | ${wData.weather[0].main}`;
 
             const aRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
             const aData = await aRes.json();
-            const outAqi = aData.list[0].main.aqi; // 1 to 5 scale
-            const aqiMap = ["-", "50", "100", "150", "200", "300"]; // Simple mapping for display
-            document.getElementById('out-aqi').innerText = aqiMap[outAqi];
             
-            const colors = ["#fff", "#4ade80", "#facc15", "#fb923c", "#f87171", "#b91c1c"];
-            document.getElementById('out-aqi').style.color = colors[outAqi];
-        } catch (e) { console.error("Weather Error"); }
+            // OpenWeather provides PM2.5, we use our calc to keep scale consistent
+            const outPm25 = Math.round(aData.list[0].components.pm2_5);
+            const outAqiInfo = getAQIInfo(outPm25);
+            
+            document.getElementById('out-aqi').innerHTML = `${outAqiInfo.val}<span class="aqi-unit">AQI</span>`;
+            document.getElementById('out-aqi').style.color = outAqiInfo.color;
+            document.getElementById('out-status').innerText = outAqiInfo.status;
+            document.getElementById('out-status').style.color = outAqiInfo.color;
+            document.getElementById('card-out').style.borderColor = outAqiInfo.color + "55";
+        } catch (e) { console.error("Outdoor Error"); }
     }
 
     function updateClock() {
@@ -168,7 +185,7 @@
         document.getElementById('date').innerText = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
     }
 
-    setInterval(updateData, 60000);
+    setInterval(updateData, 60000); // Internal data refresh every 1 min
     setInterval(updateClock, 1000);
     updateData();
     updateClock();
