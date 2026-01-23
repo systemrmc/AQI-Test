@@ -2,170 +2,184 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AQI</title>
+    <title>One Lodha Place | Air Quality Dashboard</title>
     <meta http-equiv="refresh" content="300"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #05070a; --card: #12161f; --accent: #00d2ff;
-            --good: #4ade80; --mod: #facc15; --poor: #fb923c; --bad: #f87171;
+            --gold: #9e801b;
+            --text-dark: #4a4a4a;
+            --glass: rgba(255, 255, 255, 0.45);
         }
-        body { background: var(--bg); color: white; font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 20px; box-sizing: border-box; overflow: hidden; }
-        .container { display: grid; grid-template-rows: 100px 1fr 180px; height: 98vh; gap: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        #clock { font-size: 4em; font-weight: bold; color: var(--accent); }
-        #date { font-size: 2em; color: #8b949e; }
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .big-card { background: var(--card); border-radius: 40px; border: 2px solid #232936; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .label-main { font-size: 2.2em; color: #8b949e; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
-        .aqi-val { font-size: 12em; font-weight: 900; line-height: 0.9; }
-        .aqi-unit { font-size: 0.25em; color: #8b949e; margin-left: 10px; display: inline-block; vertical-align: middle; }
-        .aqi-status { font-size: 2.5em; font-weight: bold; margin-top: 15px; text-transform: uppercase; }
-        .sensor-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .mini-card { background: var(--card); border-radius: 25px; border: 2px solid #232936; padding: 15px; text-align: center; }
-        .mini-label { font-size: 1.2em; color: #8b949e; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .mini-val { font-size: 3.5em; font-weight: bold; }
-        .mini-unit { font-size: 0.4em; color: #8b949e; margin-left: 5px; font-weight: normal; }
-        .weather-info { font-size: 1.8em; color: #8b949e; }
+        
+        body { 
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at top left, #fdfcfb 0%, #e2d1c3 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        /* Wave Effect Overlay */
+        body::before {
+            content: ""; position: absolute; width: 150%; height: 150%; top: -25%; left: -25%;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(226,209,195,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(-15deg); z-index: -1;
+        }
+
+        .header-top { font-size: 1.2em; letter-spacing: 6px; text-transform: uppercase; color: #8a8a8a; margin-bottom: 10px; }
+        .main-headline { font-size: 3.5em; font-weight: 300; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 60px; color: #555; text-align: center; }
+        .main-headline b { font-weight: 600; color: #444; }
+
+        .card-container { display: flex; gap: 50px; }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 30px;
+            width: 520px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card-label { font-size: 1.3em; letter-spacing: 5px; text-transform: uppercase; color: #777; margin-bottom: 20px; }
+        .aqi-value { font-size: 13em; font-weight: 300; color: var(--gold); line-height: 1; margin: 20px 0; }
+
+        .sub-metrics {
+            display: flex;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 15px;
+            margin-top: 40px;
+            padding: 25px 0;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.2);
+        }
+        .metric-item { flex: 1; border-right: 1px solid rgba(0,0,0,0.08); }
+        .metric-item:last-child { border-right: none; }
+        
+        .metric-label { font-size: 0.9em; text-transform: uppercase; letter-spacing: 3px; color: #888; display: block; margin-bottom: 8px; }
+        .metric-val { font-size: 2.2em; font-weight: 600; color: var(--gold); }
+        .metric-unit { font-size: 0.5em; color: var(--gold); margin-left: 5px; vertical-align: middle; }
+
+        .footer { position: absolute; bottom: 50px; letter-spacing: 6px; text-transform: uppercase; color: #8a8a8a; font-size: 1.1em; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div id="date">Loading...</div>
-        <div class="weather-info" id="out-summary">Mumbai: --°C | --</div>
-        <div id="clock">00:00:00</div>
-    </div>
+    <div class="header-top">Live AQI</div>
+    <div class="main-headline">Indoor Air Quality is <b id="status-text">Excellent</b></div>
 
-    <div class="main-grid">
-        <div class="big-card" id="card-in">
-            <div class="label-main">Office Inside (Avg)</div>
-            <div class="aqi-val" id="in-aqi">--<span class="aqi-unit">AQI</span></div>
-            <div class="aqi-status" id="in-status">---</div>
+    <div class="card-container">
+        <div class="glass-card">
+            <div class="card-label">Internal AQI</div>
+            <div class="aqi-value" id="in-aqi">--</div>
+            <div class="sub-metrics">
+                <div class="metric-item">
+                    <span class="metric-label">PM2.5</span>
+                    <span class="metric-val" id="in-pm25">--<span class="metric-unit">µg/m³</span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">PM10</span>
+                    <span class="metric-val" id="in-pm10">--<span class="metric-unit">µg/m³</span></span>
+                </div>
+            </div>
         </div>
-        <div class="big-card" id="card-out">
-            <div class="label-main">Mumbai Outside</div>
-            <div class="aqi-val" id="out-aqi">--<span class="aqi-unit">AQI</span></div>
-            <div class="aqi-status" id="out-status">---</div>
-        </div>
-    </div>
 
-    <div class="sensor-grid">
-        <div class="mini-card">
-            <span class="mini-label">Avg PM2.5</span>
-            <span class="mini-val" id="val-pm25">--<span class="mini-unit">µg/m³</span></span>
-        </div>
-        <div class="mini-card">
-            <span class="mini-label">Avg PM10</span>
-            <span class="mini-val" id="val-pm10">--<span class="mini-unit">µg/m³</span></span>
-        </div>
-        <div class="mini-card">
-            <span class="mini-label">Avg Temp</span>
-            <span class="mini-val" id="val-temp">--<span class="mini-unit">°C</span></span>
-        </div>
-        <div class="mini-card">
-            <span class="mini-label">Avg Humidity</span>
-            <span class="mini-val" id="val-humid">--<span class="mini-unit">%</span></span>
+        <div class="glass-card">
+            <div class="card-label">External AQI</div>
+            <div class="aqi-value" id="out-aqi">--</div>
+            <div class="sub-metrics">
+                <div class="metric-item">
+                    <span class="metric-label">PM2.5</span>
+                    <span class="metric-val" id="out-pm25">--<span class="metric-unit">µg/m³</span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">PM10</span>
+                    <span class="metric-val" id="out-pm10">--<span class="metric-unit">µg/m³</span></span>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
-    const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
-    const LAT = "19.0000", LON = "72.8200"; 
-    
-    // The 6 Device IDs to average
-    const DEVICE_IDS = [
-        'd17c469a-1db3-4c73-85ba-8402e658f600',
-        'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7',
-        'c7b40131-0924-4bdd-82dd-f2643847b39e',
-        '424782d5-5528-43e4-8320-786dac9b62f2',
-        'e484e715-2fea-4480-8b66-1f07e02980fa',
-        '796ebfee-564a-4361-b7d1-90f86c9297ed' // Including the original one for 6 total
-    ];
+    <div class="footer">One Lodha Place, Mumbai</div>
 
-    function getAQIInfo(pm) {
-        if (pm <= 30) return { val: Math.round(pm * 50 / 30), status: "Good", color: "#4ade80" };
-        if (pm <= 60) return { val: Math.round(50 + (pm - 30) * 50 / 30), status: "Satisfactory", color: "#facc15" };
-        if (pm <= 90) return { val: Math.round(100 + (pm - 60) * 100 / 30), status: "Moderate", color: "#fb923c" };
-        if (pm <= 120) return { val: Math.round(200 + (pm - 90) * 100 / 30), status: "Poor", color: "#f87171" };
-        return { val: 301, status: "Very Poor", color: "#b91c1c" };
-    }
+    <script>
+        const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
+        const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
+        const LAT = "19.0000", LON = "72.8200"; 
+        
+        const DEVICE_IDS = [
+            'd17c469a-1db3-4c73-85ba-8402e658f600',
+            'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7',
+            'c7b40131-0924-4bdd-82dd-f2643847b39e',
+            '424782d5-5528-43e4-8320-786dac9b62f2',
+            'e484e715-2fea-4480-8b66-1f07e02980fa',
+            '796ebfee-564a-4361-b7d1-90f86c9297ed'
+        ];
 
-    async function updateData() {
-        // 1. FETCH & AVERAGE INDOOR DEVICES
-        try {
-            const fetchPromises = DEVICE_IDS.map(id => 
-                fetch(`https://api.kaiterra.com/v1/devices/${id}/top?key=${K_KEY}`).then(r => r.json())
-            );
+        function calcAQI(pm) {
+            if (pm <= 30) return Math.round(pm * 50 / 30);
+            if (pm <= 60) return Math.round(51 + (pm - 30) * (49 / 30));
+            if (pm <= 90) return Math.round(101 + (pm - 60) * (99 / 30));
+            return 201;
+        }
 
-            const results = await Promise.allSettled(fetchPromises);
-            
-            let totalPM25 = 0, totalPM10 = 0, totalTemp = 0, totalHumid = 0, count = 0;
+        function getStatus(aqi) {
+            if (aqi <= 50) return "Excellent";
+            if (aqi <= 100) return "Satisfactory";
+            if (aqi <= 200) return "Moderate";
+            return "Poor";
+        }
 
-            results.forEach(result => {
-                if (result.status === 'fulfilled' && result.value.data) {
-                    const data = result.value.data;
-                    try {
-                        totalPM25 += data.find(d => d.param === 'rpm25c').points[0].value;
-                        totalPM10 += data.find(d => d.param === 'rpm10c').points[0].value;
-                        totalTemp += data.find(d => d.param === 'rtemp').points[0].value;
-                        totalHumid += data.find(d => d.param === 'rhumid').points[0].value;
+        async function updateData() {
+            // 1. INDOOR AVERAGING
+            try {
+                const fetches = DEVICE_IDS.map(id => fetch(`https://api.kaiterra.com/v1/devices/${id}/top?key=${K_KEY}`).then(r => r.json()));
+                const results = await Promise.allSettled(fetches);
+                
+                let t25 = 0, t10 = 0, count = 0;
+                results.forEach(res => {
+                    if (res.status === 'fulfilled' && res.value.data) {
+                        const d = res.value.data;
+                        t25 += d.find(x => x.param === 'rpm25c').points[0].value;
+                        t10 += d.find(x => x.param === 'rpm10c').points[0].value;
                         count++;
-                    } catch(e) { console.warn("Partial data error for one device"); }
+                    }
+                });
+
+                if (count > 0) {
+                    const avg25 = Math.round(t25 / count);
+                    const avg10 = Math.round(t10 / count);
+                    const aqi = calcAQI(avg25);
+                    
+                    document.getElementById('in-aqi').innerText = aqi;
+                    document.getElementById('in-pm25').innerHTML = `${avg25}<span class="metric-unit">µg/m³</span>`;
+                    document.getElementById('in-pm10').innerHTML = `${avg10}<span class="metric-unit">µg/m³</span>`;
+                    document.getElementById('status-text').innerText = getStatus(aqi);
                 }
-            });
+            } catch (e) { console.error("Indoor fetch error"); }
 
-            if (count > 0) {
-                const avgPM25 = Math.round(totalPM25 / count);
-                const avgPM10 = Math.round(totalPM10 / count);
-                const avgTemp = (totalTemp / count).toFixed(1);
-                const avgHumid = Math.round(totalHumid / count);
+            // 2. OUTDOOR
+            try {
+                const pRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
+                const pData = await pRes.json();
+                const out25 = Math.round(pData.list[0].components.pm2_5);
+                const out10 = Math.round(pData.list[0].components.pm10);
+                const outAQI = calcAQI(out25);
 
-                const aqiInfo = getAQIInfo(avgPM25);
-                document.getElementById('in-aqi').innerHTML = `${aqiInfo.val}<span class="aqi-unit">AQI</span>`;
-                document.getElementById('in-aqi').style.color = aqiInfo.color;
-                document.getElementById('in-status').innerText = aqiInfo.status;
-                document.getElementById('in-status').style.color = aqiInfo.color;
-                document.getElementById('card-in').style.borderColor = aqiInfo.color + "55";
+                document.getElementById('out-aqi').innerText = outAQI;
+                document.getElementById('out-pm25').innerHTML = `${out25}<span class="metric-unit">µg/m³</span>`;
+                document.getElementById('out-pm10').innerHTML = `${out10}<span class="metric-unit">µg/m³</span>`;
+            } catch (e) { console.error("Outdoor fetch error"); }
+        }
 
-                document.getElementById('val-pm25').innerHTML = `${avgPM25}<span class="mini-unit">µg/m³</span>`;
-                document.getElementById('val-pm10').innerHTML = `${avgPM10}<span class="mini-unit">µg/m³</span>`;
-                document.getElementById('val-temp').innerHTML = `${avgTemp}<span class="mini-unit">°C</span>`;
-                document.getElementById('val-humid').innerHTML = `${avgHumid}<span class="mini-unit">%</span>`;
-            }
-        } catch (e) { console.error("Indoor Error:", e); }
-
-        // 2. OUTDOOR (OpenWeather)
-        try {
-            const wRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&appid=${W_KEY}`);
-            const wData = await wRes.json();
-            document.getElementById('out-summary').innerText = `Mumbai: ${Math.round(wData.main.temp)}°C | ${wData.weather[0].main}`;
-
-            const aRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
-            const aData = await aRes.json();
-            const outPm25 = Math.round(aData.list[0].components.pm2_5);
-            const outAqiInfo = getAQIInfo(outPm25);
-            
-            document.getElementById('out-aqi').innerHTML = `${outAqiInfo.val}<span class="aqi-unit">AQI</span>`;
-            document.getElementById('out-aqi').style.color = outAqiInfo.color;
-            document.getElementById('out-status').innerText = outAqiInfo.status;
-            document.getElementById('out-status').style.color = outAqiInfo.color;
-            document.getElementById('card-out').style.borderColor = outAqiInfo.color + "55";
-        } catch (e) { console.error("Outdoor Error:", e); }
-    }
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString();
-        document.getElementById('date').innerText = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-    }
-
-    setInterval(updateData, 60000); 
-    setInterval(updateClock, 1000);
-    updateData();
-    updateClock();
-</script>
+        setInterval(updateData, 60000);
+        updateData();
+    </script>
 </body>
 </html>
