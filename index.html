@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <title>One Lodha Place | Air Quality Dashboard</title>
     <meta http-equiv="refresh" content="300"> 
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #9e801b;
-            --text-muted: #8a8a8a;
-            --text-main: #4a4a4a;
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.85);
+            --text-greyish: #8a8a8a; /* Unified greyish tone */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.9);
         }
         
         body, html { 
@@ -21,74 +20,81 @@
             background-size: cover;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden;
-            color: var(--text-main);
+            color: var(--text-greyish);
         }
 
-        /* 20% Upscaled Header */
         .header-top { 
-            font-size: 0.9em; letter-spacing: 7px; text-transform: uppercase; 
-            color: var(--text-muted); margin-bottom: 5px; font-weight: 400;
+            font-size: 1.5em; letter-spacing: 12px; text-transform: uppercase; 
+            color: var(--text-greyish); margin-bottom: 10px; font-weight: 400;
         }
 
+        /* Entire headline is now Greyish */
         .main-headline { 
-            font-size: 2.8em; font-weight: 300; text-transform: uppercase; letter-spacing: 12px; 
-            margin-bottom: 50px; color: var(--text-main); text-align: center;
+            font-size: 4.5em; font-weight: 300; text-transform: uppercase; letter-spacing: 20px; 
+            margin-bottom: 80px; color: var(--text-greyish); 
+            text-align: center;
         }
-        .main-headline b { font-weight: 500; color: var(--gold); }
+        
+        /* Status word is Greyish but BOLD (Weight 600) */
+        .main-headline b { 
+            font-weight: 600; 
+            color: var(--text-greyish); 
+        }
 
-        /* 20% Upscaled Card Layout */
-        .card-container { display: flex; gap: 40px; }
+        .card-container { display: flex; gap: 80px; }
 
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 35px;
-            width: 460px; /* Scaled from 380px */
-            padding: 60px 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 60px;
+            width: 850px; 
+            padding: 100px 60px;
             text-align: center;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.04);
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.05);
         }
 
         .card-label { 
-            font-size: 1.1em; letter-spacing: 6px; text-transform: uppercase; 
-            color: var(--text-muted); margin-bottom: 25px; font-weight: 400; 
+            font-size: 2em; letter-spacing: 12px; text-transform: uppercase; 
+            color: var(--text-greyish); margin-bottom: 40px; font-weight: 400; 
         }
         
-        /* The Big AQI Number - 20% larger */
         .aqi-value { 
-            font-size: 11.5em; font-weight: 200; color: var(--gold); 
-            line-height: 1; margin: 10px 0 35px 0; letter-spacing: -6px; 
+            font-size: 22em; font-weight: 200; color: var(--gold); 
+            line-height: 1; margin: 20px 0 60px 0; letter-spacing: -12px; 
         }
 
-        /* The Metrics Box - Scaled and refined */
         .metrics-box {
             display: flex;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 15px;
-            padding: 22px 0;
-            margin-top: 25px;
-            background: rgba(255,255,255,0.25);
+            border: 2px solid rgba(158, 128, 27, 0.15);
+            border-radius: 30px;
+            padding: 40px 0;
+            margin-top: 40px;
+            background: rgba(255,255,255,0.35);
         }
 
         .metric-item { flex: 1; position: relative; }
         .metric-item:first-child::after {
             content: ""; position: absolute; right: 0; top: 15%; height: 70%;
-            width: 1.5px; background: rgba(0,0,0,0.08);
+            width: 3px; background: rgba(158, 128, 27, 0.1);
         }
         
         .metric-label { 
-            font-size: 0.85em; text-transform: uppercase; letter-spacing: 3px; 
-            color: var(--text-muted); display: block; margin-bottom: 5px; 
+            font-size: 1.5em; text-transform: uppercase; letter-spacing: 5px; 
+            color: var(--text-greyish); display: block; margin-bottom: 10px; 
         }
-        .metric-val { font-size: 1.8em; font-weight: 400; color: var(--text-main); }
-        .metric-unit { font-size: 0.5em; color: var(--text-muted); margin-left: 3px; font-weight: 300; }
 
-        /* Footer Scaled up */
+        /* Metrics stay in Gold as per previous instruction */
+        .metric-val { font-size: 3.5em; font-weight: 400; color: var(--gold); }
+        .metric-unit { 
+            font-size: 0.5em; color: var(--gold); opacity: 0.8;
+            margin-left: 8px; font-weight: 300; 
+        }
+
         .footer { 
-            position: absolute; bottom: 50px; letter-spacing: 10px; 
-            text-transform: uppercase; color: var(--text-muted); font-size: 1.1em; 
+            position: absolute; bottom: 80px; letter-spacing: 15px; 
+            text-transform: uppercase; color: var(--text-greyish); font-size: 1.8em; 
         }
     </style>
 </head>
@@ -132,6 +138,7 @@
     <div class="footer">One Lodha Place, Mumbai</div>
 
     <script>
+        // API logic remains the same
         const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
         const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
         const LAT = "19.0000", LON = "72.8200"; 
