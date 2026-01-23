@@ -9,64 +9,71 @@
         :root {
             --gold: #9e801b;
             --text-dark: #4a4a4a;
-            --glass: rgba(255, 255, 255, 0.45);
+            --glass: rgba(255, 255, 255, 0.5);
         }
         
-        body { 
-            margin: 0; padding: 0; height: 100vh;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        body, html { 
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
             font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at top left, #fdfcfb 0%, #e2d1c3 100%);
-            background-attachment: fixed;
-            color: var(--text-dark);
+            /* Using your uploaded silk wave image */
+            background: url('background.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden;
+            color: var(--text-dark);
         }
 
-        /* Wave Effect Overlay */
-        body::before {
-            content: ""; position: absolute; width: 150%; height: 150%; top: -25%; left: -25%;
-            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(226,209,195,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(-15deg); z-index: -1;
+        .header-top { 
+            font-size: 1em; letter-spacing: 8px; text-transform: uppercase; color: #a19a94; 
+            margin-bottom: 5px; 
         }
 
-        .header-top { font-size: 1.2em; letter-spacing: 6px; text-transform: uppercase; color: #8a8a8a; margin-bottom: 10px; }
-        .main-headline { font-size: 3.5em; font-weight: 300; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 60px; color: #555; text-align: center; }
-        .main-headline b { font-weight: 600; color: #444; }
+        .main-headline { 
+            font-size: 3.2em; font-weight: 300; text-transform: uppercase; letter-spacing: 10px; 
+            margin-bottom: 55px; color: #555; text-align: center;
+        }
+        .main-headline b { font-weight: 600; color: var(--gold); text-transform: uppercase; }
 
-        .card-container { display: flex; gap: 50px; }
+        .card-container { display: flex; gap: 40px; }
 
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 30px;
-            width: 520px;
+            width: 500px;
             padding: 60px 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.04);
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.7);
         }
 
-        .card-label { font-size: 1.3em; letter-spacing: 5px; text-transform: uppercase; color: #777; margin-bottom: 20px; }
-        .aqi-value { font-size: 13em; font-weight: 300; color: var(--gold); line-height: 1; margin: 20px 0; }
+        .card-label { 
+            font-size: 1.2em; letter-spacing: 6px; text-transform: uppercase; 
+            color: #888; margin-bottom: 25px; font-weight: 400; 
+        }
+        
+        .aqi-value { 
+            font-size: 13.5em; font-weight: 300; color: var(--gold); 
+            line-height: 0.9; margin: 20px 0; letter-spacing: -5px; 
+        }
 
         .sub-metrics {
-            display: flex;
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 15px;
-            margin-top: 40px;
-            padding: 25px 0;
+            display: flex; margin-top: 40px; padding-top: 30px;
             justify-content: space-around;
-            background: rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(0,0,0,0.06);
         }
-        .metric-item { flex: 1; border-right: 1px solid rgba(0,0,0,0.08); }
+        .metric-item { flex: 1; border-right: 1px solid rgba(0,0,0,0.06); }
         .metric-item:last-child { border-right: none; }
         
-        .metric-label { font-size: 0.9em; text-transform: uppercase; letter-spacing: 3px; color: #888; display: block; margin-bottom: 8px; }
-        .metric-val { font-size: 2.2em; font-weight: 600; color: var(--gold); }
-        .metric-unit { font-size: 0.5em; color: var(--gold); margin-left: 5px; vertical-align: middle; }
+        .metric-label { font-size: 0.85em; text-transform: uppercase; letter-spacing: 3px; color: #999; display: block; margin-bottom: 10px; }
+        .metric-val { font-size: 2.4em; font-weight: 400; color: #444; }
+        .metric-unit { font-size: 0.45em; color: #aaa; margin-left: 4px; vertical-align: middle; }
 
-        .footer { position: absolute; bottom: 50px; letter-spacing: 6px; text-transform: uppercase; color: #8a8a8a; font-size: 1.1em; }
+        .footer { 
+            position: absolute; bottom: 50px; letter-spacing: 8px; 
+            text-transform: uppercase; color: #a19a94; font-size: 1em; font-weight: 400; 
+        }
     </style>
 </head>
 <body>
@@ -114,12 +121,9 @@
         const LAT = "19.0000", LON = "72.8200"; 
         
         const DEVICE_IDS = [
-            'd17c469a-1db3-4c73-85ba-8402e658f600',
-            'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7',
-            'c7b40131-0924-4bdd-82dd-f2643847b39e',
-            '424782d5-5528-43e4-8320-786dac9b62f2',
-            'e484e715-2fea-4480-8b66-1f07e02980fa',
-            '796ebfee-564a-4361-b7d1-90f86c9297ed'
+            'd17c469a-1db3-4c73-85ba-8402e658f600', 'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7',
+            'c7b40131-0924-4bdd-82dd-f2643847b39e', '424782d5-5528-43e4-8320-786dac9b62f2',
+            'e484e715-2fea-4480-8b66-1f07e02980fa', '796ebfee-564a-4361-b7d1-90f86c9297ed'
         ];
 
         function calcAQI(pm) {
@@ -129,20 +133,13 @@
             return 201;
         }
 
-        function getStatus(aqi) {
-            if (aqi <= 50) return "Excellent";
-            if (aqi <= 100) return "Satisfactory";
-            if (aqi <= 200) return "Moderate";
-            return "Poor";
-        }
-
         async function updateData() {
-            // 1. INDOOR AVERAGING
             try {
+                // Fetch and Average 6 Indoor Devices
                 const fetches = DEVICE_IDS.map(id => fetch(`https://api.kaiterra.com/v1/devices/${id}/top?key=${K_KEY}`).then(r => r.json()));
                 const results = await Promise.allSettled(fetches);
-                
                 let t25 = 0, t10 = 0, count = 0;
+                
                 results.forEach(res => {
                     if (res.status === 'fulfilled' && res.value.data) {
                         const d = res.value.data;
@@ -156,26 +153,21 @@
                     const avg25 = Math.round(t25 / count);
                     const avg10 = Math.round(t10 / count);
                     const aqi = calcAQI(avg25);
-                    
                     document.getElementById('in-aqi').innerText = aqi;
                     document.getElementById('in-pm25').innerHTML = `${avg25}<span class="metric-unit">µg/m³</span>`;
                     document.getElementById('in-pm10').innerHTML = `${avg10}<span class="metric-unit">µg/m³</span>`;
-                    document.getElementById('status-text').innerText = getStatus(aqi);
+                    document.getElementById('status-text').innerText = aqi <= 50 ? "Excellent" : "Pristine";
                 }
-            } catch (e) { console.error("Indoor fetch error"); }
 
-            // 2. OUTDOOR
-            try {
+                // Fetch Outdoor Air Quality
                 const pRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
                 const pData = await pRes.json();
                 const out25 = Math.round(pData.list[0].components.pm2_5);
                 const out10 = Math.round(pData.list[0].components.pm10);
-                const outAQI = calcAQI(out25);
-
-                document.getElementById('out-aqi').innerText = outAQI;
+                document.getElementById('out-aqi').innerText = calcAQI(out25);
                 document.getElementById('out-pm25').innerHTML = `${out25}<span class="metric-unit">µg/m³</span>`;
                 document.getElementById('out-pm10').innerHTML = `${out10}<span class="metric-unit">µg/m³</span>`;
-            } catch (e) { console.error("Outdoor fetch error"); }
+            } catch (e) { console.error("Sync Error"); }
         }
 
         setInterval(updateData, 60000);
