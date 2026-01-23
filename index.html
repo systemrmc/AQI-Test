@@ -8,7 +8,7 @@
     <style>
         :root {
             --gold: #9e801b;
-            --text-greyish: #8a8a8a; /* Unified greyish tone */
+            --text-greyish: #8a8a8a;
             --glass-bg: rgba(255, 255, 255, 0.7);
             --glass-border: rgba(255, 255, 255, 0.9);
         }
@@ -23,78 +23,76 @@
             color: var(--text-greyish);
         }
 
+        /* Scaled Header */
         .header-top { 
-            font-size: 1.5em; letter-spacing: 12px; text-transform: uppercase; 
-            color: var(--text-greyish); margin-bottom: 10px; font-weight: 400;
+            font-size: 1.1em; letter-spacing: 9px; text-transform: uppercase; 
+            color: var(--text-greyish); margin-bottom: 8px; font-weight: 400;
         }
 
-        /* Entire headline is now Greyish */
         .main-headline { 
-            font-size: 4.5em; font-weight: 300; text-transform: uppercase; letter-spacing: 20px; 
-            margin-bottom: 80px; color: var(--text-greyish); 
+            font-size: 3.2em; font-weight: 300; text-transform: uppercase; letter-spacing: 15px; 
+            margin-bottom: 60px; color: var(--text-greyish); 
             text-align: center;
         }
-        
-        /* Status word is Greyish but BOLD (Weight 600) */
-        .main-headline b { 
-            font-weight: 600; 
-            color: var(--text-greyish); 
-        }
+        .main-headline b { font-weight: 600; color: var(--text-greyish); }
 
-        .card-container { display: flex; gap: 80px; }
+        /* Scaled Cards */
+        .card-container { display: flex; gap: 60px; }
 
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 60px;
-            width: 850px; 
-            padding: 100px 60px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 45px;
+            width: 600px; /* Reduced from 850px */
+            padding: 75px 45px;
             text-align: center;
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.05);
+            border: 1.5px solid var(--glass-border);
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.04);
         }
 
         .card-label { 
-            font-size: 2em; letter-spacing: 12px; text-transform: uppercase; 
-            color: var(--text-greyish); margin-bottom: 40px; font-weight: 400; 
+            font-size: 1.4em; letter-spacing: 9px; text-transform: uppercase; 
+            color: var(--text-greyish); margin-bottom: 30px; font-weight: 400; 
         }
         
+        /* Scaled AQI Value */
         .aqi-value { 
-            font-size: 22em; font-weight: 200; color: var(--gold); 
-            line-height: 1; margin: 20px 0 60px 0; letter-spacing: -12px; 
+            font-size: 15.5em; font-weight: 200; color: var(--gold); 
+            line-height: 1; margin: 15px 0 45px 0; letter-spacing: -9px; 
         }
 
+        /* Scaled Metrics Box */
         .metrics-box {
             display: flex;
-            border: 2px solid rgba(158, 128, 27, 0.15);
-            border-radius: 30px;
-            padding: 40px 0;
-            margin-top: 40px;
+            border: 1.5px solid rgba(158, 128, 27, 0.15);
+            border-radius: 22px;
+            padding: 30px 0;
+            margin-top: 30px;
             background: rgba(255,255,255,0.35);
         }
 
         .metric-item { flex: 1; position: relative; }
         .metric-item:first-child::after {
             content: ""; position: absolute; right: 0; top: 15%; height: 70%;
-            width: 3px; background: rgba(158, 128, 27, 0.1);
+            width: 2px; background: rgba(158, 128, 27, 0.1);
         }
         
         .metric-label { 
-            font-size: 1.5em; text-transform: uppercase; letter-spacing: 5px; 
-            color: var(--text-greyish); display: block; margin-bottom: 10px; 
+            font-size: 1.1em; text-transform: uppercase; letter-spacing: 4px; 
+            color: var(--text-greyish); display: block; margin-bottom: 8px; 
         }
 
-        /* Metrics stay in Gold as per previous instruction */
-        .metric-val { font-size: 3.5em; font-weight: 400; color: var(--gold); }
+        .metric-val { font-size: 2.5em; font-weight: 400; color: var(--gold); }
         .metric-unit { 
             font-size: 0.5em; color: var(--gold); opacity: 0.8;
-            margin-left: 8px; font-weight: 300; 
+            margin-left: 6px; font-weight: 300; 
         }
 
+        /* Scaled Footer */
         .footer { 
-            position: absolute; bottom: 80px; letter-spacing: 15px; 
-            text-transform: uppercase; color: var(--text-greyish); font-size: 1.8em; 
+            position: absolute; bottom: 60px; letter-spacing: 12px; 
+            text-transform: uppercase; color: var(--text-greyish); font-size: 1.3em; 
         }
     </style>
 </head>
@@ -138,7 +136,6 @@
     <div class="footer">One Lodha Place, Mumbai</div>
 
     <script>
-        // API logic remains the same
         const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
         const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
         const LAT = "19.0000", LON = "72.8200"; 
