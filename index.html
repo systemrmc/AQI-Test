@@ -15,94 +15,89 @@
         }
         
         body, html { 
-            margin: 0; padding: 0; min-height: 100vh; width: 100vw;
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
             font-family: 'Jost', sans-serif;
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            display: flex; flex-direction: column; align-items: center;
             color: var(--text-greyish);
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         .dashboard-wrapper {
-            width: 90%;
-            max-width: 1400px;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 5vh;
+            justify-content: space-between;
+            padding: 4vh 0;
+            box-sizing: border-box;
         }
 
-        /* Responsive Text Sizes */
         .header-top, .footer-text { 
-            font-size: 1.5rem;
+            font-size: 2.5vh; /* Fluid vertical scaling */
             font-weight: 500;
             text-transform: uppercase; 
             text-align: center;
-            margin-top: 5vh;
         }
 
         .main-headline { 
-            font-size: 2.2rem; 
+            font-size: 5vh; /* Fluid vertical scaling */
             font-weight: 400; 
             text-transform: uppercase; 
             text-align: center;
-            margin: 2vh 0;
-            width: 100%;
+            margin: 1vh 0;
         }
         #status-text { font-weight: 600; }
 
-        /* Container & Square Card Logic */
         .card-container { 
             display: flex; 
             flex-direction: row; 
-            gap: 40px; 
+            gap: 5vw; /* Gap reduced to 50% */
             justify-content: center;
-            align-items: stretch;
-            margin-top: 4vh;
+            align-items: center;
             width: 100%;
+            flex: 1;
         }
 
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px;
-            /* Using vw for sizing ensures square stays square on desktops/TVs */
-            width: 32vw; 
-            height: 32vw;
-            max-width: 450px;
-            max-height: 450px;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: 8vh;
+            width: 70vh; 
+            height: 70vh;
             display: flex; 
             flex-direction: column; 
             justify-content: space-around;
             align-items: center; 
-            padding: 30px 20px;
-            border: 1px solid var(--glass-border);
+            padding: 5vh 2vw;
+            border: 0.2vh solid var(--glass-border);
             box-sizing: border-box;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            box-shadow: 0 4vh 8vh rgba(0,0,0,0.1);
         }
 
         .card-label { 
-            font-size: 1.4rem; 
+            font-size: 3.5vh; 
             text-transform: uppercase; 
             font-weight: 400;
         }
         .card-label b { font-weight: 700; color: #444; }
 
         .aqi-value { 
-            font-size: 8rem; 
+            font-size: 25vh; 
             font-weight: 200; 
             color: var(--gold); 
-            line-height: 0.8; 
+            line-height: 0.7; 
             margin: 0;
         }
 
         .metrics-box {
             display: flex; 
-            width: 90%; 
-            border: 1px solid rgba(158, 128, 27, 0.2);
-            border-radius: 20px; 
-            padding: 15px 0;
+            width: 100%; 
+            border: 0.3vh solid rgba(158, 128, 27, 0.2);
+            border-radius: 4vh; 
+            padding: 3vh 0;
             background: rgba(255,255,255,0.1);
         }
 
@@ -115,36 +110,35 @@
         }
         
         .metric-label { 
-            font-size: 0.9rem; 
+            font-size: 3vh; 
             text-transform: uppercase; 
-            margin-bottom: 2px; 
             font-weight: 400; 
+            margin-bottom: 0.5vh;
         }
 
         .metric-val { 
-            font-size: 1.5rem; 
-            font-weight: 400; 
+            font-size: 4.5vh; 
+            font-weight: 500; 
             color: var(--gold); 
-            white-space: nowrap; /* Prevents overlapping on small screens */
+            white-space: nowrap;
         }
         
-        .metric-unit { font-size: 0.7rem; margin-left: 2px; }
-
-        .footer-container { margin-top: auto; padding: 5vh 0; }
-
-        /* Mobile Viewport Overrides */
-        @media (max-width: 768px) {
-            .card-container { flex-direction: column; align-items: center; }
-            .glass-card { width: 85vw; height: 85vw; max-width: none; max-height: none; }
-            .aqi-value { font-size: 6rem; }
-            .main-headline { font-size: 1.5rem; }
-            .header-top, .footer-text { font-size: 1.1rem; }
+        .metric-unit { 
+            font-size: 1em; 
+            font-weight: 500;
+            margin-left: 1vh; 
         }
 
-        /* TV and Large Desktop Adjustments */
-        @media (min-width: 1600px) {
-            .glass-card { width: 450px; height: 450px; }
-            .aqi-value { font-size: 10rem; }
+        /* Mobile specific fluid override */
+        @media (orientation: portrait) {
+            .card-container { flex-direction: column; gap: 3vh; }
+            .glass-card { width: 85vw; height: 85vw; }
+            .aqi-value { font-size: 25vw; }
+            .card-label { font-size: 5vw; }
+            .metric-label { font-size: 4vw; }
+            .metric-val { font-size: 6vw; }
+            .main-headline { font-size: 6vw; }
+            .header-top, .footer-text { font-size: 4vw; }
         }
     </style>
 </head>
@@ -164,7 +158,7 @@
                         <span class="metric-label">PM2.5</span>
                         <span class="metric-val" id="in-pm25">--</span>
                     </div>
-                    <div class="metric-item" style="border-left: 1px solid rgba(158,128,27,0.2);">
+                    <div class="metric-item" style="border-left: 0.3vh solid rgba(158,128,27,0.2);">
                         <span class="metric-label">PM10</span>
                         <span class="metric-val" id="in-pm10">--</span>
                     </div>
@@ -179,7 +173,7 @@
                         <span class="metric-label">PM2.5</span>
                         <span class="metric-val" id="out-pm25">--</span>
                     </div>
-                    <div class="metric-item" style="border-left: 1px solid rgba(158,128,27,0.2);">
+                    <div class="metric-item" style="border-left: 0.3vh solid rgba(158,128,27,0.2);">
                         <span class="metric-label">PM10</span>
                         <span class="metric-val" id="out-pm10">--</span>
                     </div>
@@ -187,9 +181,7 @@
             </div>
         </div>
 
-        <div class="footer-container">
-            <div class="footer-text">One Lodha Place, Mumbai</div>
-        </div>
+        <div class="footer-text">One Lodha Place, Mumbai</div>
     </div>
 
     <script>
