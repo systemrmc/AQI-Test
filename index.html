@@ -15,58 +15,61 @@
         }
         
         body, html { 
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            margin: 0; padding: 0; min-height: 100vh; width: 100vw;
             font-family: 'Jost', sans-serif;
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
             color: var(--text-greyish);
-            overflow: hidden;
+            /* Allow scrolling only if content overflows (mobile) */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .dashboard-wrapper {
             width: 90vw;
-            height: 100vh;
+            min-height: 100vh;
             max-width: 1300px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* HEADER */
         .header-top { 
-            font-size: clamp(1.1rem, 1.6vw, 1.8rem); 
-            letter-spacing: 0.2vw; 
+            font-size: clamp(1.1rem, 1.4vw, 1.6rem); 
+            letter-spacing: 0.3vw; 
             text-transform: uppercase; 
             font-weight: 500;
-            margin-top: 4vh;
+            margin-top: 6vh;
         }
 
         .main-headline { 
-            font-size: clamp(1.8rem, 3.1vw, 3.8rem); 
-            font-weight: 300; 
+            font-size: clamp(1.4rem, 3.2vw, 3.8rem); 
+            font-weight: 400; 
             text-transform: uppercase; 
-            letter-spacing: 0.06vw;
+            letter-spacing: 0.05vw;
             text-align: center;
-            margin: 2vh 0 3vh 0;
-            white-space: nowrap;
+            margin: 2vh 0 0 0;
+            width: 100%;
         }
         #status-text { font-weight: 600; }
 
-        /* CARDS */
+        /* RESPONSIVE CONTAINER */
         .card-container { 
             display: flex; 
+            flex-direction: row; /* Default Desktop */
             gap: 3vw; 
             width: 100%;
             justify-content: center;
             align-items: center;
+            margin-top: 8vh; 
         }
 
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-radius: 50px;
-            height: 52vh;
+            height: 50vh;
             aspect-ratio: 1 / 1; 
             display: flex; flex-direction: column; 
             justify-content: space-between;
@@ -77,17 +80,35 @@
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.06);
         }
 
+        /* MOBILE OVERRIDES */
+        @media (max-width: 768px) {
+            .dashboard-wrapper { height: auto; padding-bottom: 5vh; }
+            .card-container { 
+                flex-direction: column; 
+                margin-top: 4vh;
+                gap: 5vh;
+            }
+            .glass-card {
+                width: 85vw;
+                height: 85vw; /* Maintain square on mobile */
+                padding: 4vh 5vw;
+            }
+            .header-top { margin-top: 4vh; }
+            .aqi-value { font-size: 25vw; } /* Fluid AQI for mobile */
+            .footer-container { margin-top: 6vh; flex: none; }
+        }
+
         .card-label { 
-            font-size: clamp(1.4rem, 2.2vw, 2.4rem); 
+            font-size: clamp(1.1rem, 1.8vw, 2rem); 
             letter-spacing: 0.3vw; 
             text-transform: uppercase; 
             font-weight: 400;
         }
         
         .aqi-value { 
-            font-size: clamp(8.5rem, 16vw, 19rem); 
+            font-size: clamp(5rem, 11vw, 13rem); 
             font-weight: 200; color: var(--gold); 
-            line-height: 0.7; margin: 0; letter-spacing: -0.8vw; 
+            line-height: 0.7; margin: 0; letter-spacing: -0.5vw; 
         }
 
         .metrics-box {
@@ -103,32 +124,29 @@
             width: 1px; background: rgba(158, 128, 27, 0.2);
         }
         
-        /* Labels: 1 size smaller than values */
         .metric-label { 
-            font-size: clamp(1.3rem, 1.8vw, 2.2rem); 
+            font-size: clamp(0.9rem, 1.4vw, 1.8rem); 
             text-transform: uppercase; 
             letter-spacing: 1px; 
             margin-bottom: 4px; 
             font-weight: 400; 
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
-        /* Value & Unit: Same size and Bold */
         .metric-val { 
-            font-size: clamp(1.6rem, 2.4vw, 2.8rem); 
-            font-weight: 500; 
+            font-size: clamp(1.2rem, 2.2vw, 2.6rem); 
+            font-weight: 400; 
             color: var(--gold); 
             display: flex;
             align-items: baseline;
         }
         
         .metric-unit { 
-            font-size: 1em; /* Inherits 2.4vw/2.8rem */
-            font-weight: 500; 
-            margin-left: 8px; 
+            font-size: 1em; 
+            font-weight: 400; 
+            margin-left: 6px; 
         }
 
-        /* FOOTER */
         .footer-container {
             flex: 1;
             display: flex;
@@ -138,11 +156,11 @@
         }
 
         .footer-text { 
-            font-size: clamp(1.2rem, 1.8vw, 2.2rem);
-            font-weight: 500;
+            font-size: clamp(1rem, 1.8vw, 2.2rem);
+            font-weight: 700;
             letter-spacing: -0.02vw; 
             text-transform: uppercase; 
-            white-space: nowrap;
+            text-align: center;
         }
     </style>
 </head>
@@ -191,6 +209,7 @@
     </div>
 
     <script>
+        // ... Logic for Kaiterra and OpenWeather API (No changes needed here)
         const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
         const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
         const LAT = "19.0000", LON = "72.8200";
