@@ -9,8 +9,8 @@
     <style>
         :root {
             --gold: #9e801b;
-            --text-greyish: #777777; /* Fainter greyish tone */
-            --glass-bg: rgba(255, 255, 255, 0.32);
+            --text-greyish: #777777; 
+            --glass-bg: rgba(255, 255, 255, 0.35);
             --glass-border: rgba(255, 255, 255, 0.4);
         }
         
@@ -22,128 +22,129 @@
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
             color: var(--text-greyish);
             overflow-x: hidden;
-            overflow-y: auto;
         }
 
         .dashboard-wrapper {
-            width: 90vw;
-            min-height: 100vh;
-            max-width: 1300px;
+            width: 90%;
+            max-width: 1400px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding-bottom: 5vh;
         }
 
-        /* HEADER & FOOTER - Now identical in style */
+        /* Responsive Text Sizes */
         .header-top, .footer-text { 
-            font-size: clamp(1.2rem, 1.8vw, 2.2rem);
-            font-weight: 400;
-            letter-spacing: -0.02vw; 
+            font-size: 1.5rem;
+            font-weight: 500;
             text-transform: uppercase; 
             text-align: center;
-            white-space: nowrap;
+            margin-top: 5vh;
         }
-
-        .header-top { margin-top: 6vh; }
 
         .main-headline { 
-            font-size: clamp(1.4rem, 3.2vw, 3.8rem); 
+            font-size: 2.2rem; 
             font-weight: 400; 
             text-transform: uppercase; 
-            letter-spacing: 0.05vw;
             text-align: center;
-            margin: 2vh 0 0 0;
+            margin: 2vh 0;
             width: 100%;
         }
         #status-text { font-weight: 600; }
 
+        /* Container & Square Card Logic */
         .card-container { 
             display: flex; 
             flex-direction: row; 
-            gap: 3vw; 
-            width: 100%;
+            gap: 40px; 
             justify-content: center;
-            align-items: center;
-            margin-top: 8vh; 
+            align-items: stretch;
+            margin-top: 4vh;
+            width: 100%;
         }
 
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 50px;
-            height: 50vh;
-            aspect-ratio: 1 / 1; 
-            display: flex; flex-direction: column; 
-            justify-content: space-between;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px;
+            /* Using vw for sizing ensures square stays square on desktops/TVs */
+            width: 32vw; 
+            height: 32vw;
+            max-width: 450px;
+            max-height: 450px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-around;
             align-items: center; 
-            padding: 5vh 2vw;
+            padding: 30px 20px;
             border: 1px solid var(--glass-border);
             box-sizing: border-box;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
 
-        /* Bold labels for card titles */
         .card-label { 
-            font-size: clamp(1.1rem, 1.8vw, 2rem); 
-            letter-spacing: 0.1vw; 
+            font-size: 1.4rem; 
             text-transform: uppercase; 
             font-weight: 400;
         }
-        .card-label b { font-weight: 700; }
+        .card-label b { font-weight: 700; color: #444; }
 
         .aqi-value { 
-            font-size: clamp(5rem, 11vw, 13rem); 
-            font-weight: 200; color: var(--gold); 
-            line-height: 0.7; margin: 0; letter-spacing: -0.5vw; 
+            font-size: 8rem; 
+            font-weight: 200; 
+            color: var(--gold); 
+            line-height: 0.8; 
+            margin: 0;
         }
 
         .metrics-box {
-            display: flex; width: 90%; 
-            border: 1.5px solid rgba(158, 128, 27, 0.2);
-            border-radius: 25px; padding: 2.5vh 0;
-            background: rgba(255,255,255,0.2);
+            display: flex; 
+            width: 90%; 
+            border: 1px solid rgba(158, 128, 27, 0.2);
+            border-radius: 20px; 
+            padding: 15px 0;
+            background: rgba(255,255,255,0.1);
         }
 
-        .metric-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .metric-item:first-child::after {
-            content: ""; position: absolute; right: 0; top: 15%; height: 70%;
-            width: 1px; background: rgba(158, 128, 27, 0.2);
+        .metric-item { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
         }
         
         .metric-label { 
-            font-size: clamp(0.9rem, 1.4vw, 1.8rem); 
+            font-size: 0.9rem; 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
-            margin-bottom: 4px; 
+            margin-bottom: 2px; 
             font-weight: 400; 
-            opacity: 0.7; /* Fainter */
         }
 
         .metric-val { 
-            font-size: clamp(1.2rem, 2.2vw, 2.6rem); 
+            font-size: 1.5rem; 
             font-weight: 400; 
             color: var(--gold); 
-            display: flex;
-            align-items: baseline;
+            white-space: nowrap; /* Prevents overlapping on small screens */
         }
         
-        .metric-unit { font-size: 1em; font-weight: 400; margin-left: 6px; }
+        .metric-unit { font-size: 0.7rem; margin-left: 2px; }
 
-        .footer-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
+        .footer-container { margin-top: auto; padding: 5vh 0; }
+
+        /* Mobile Viewport Overrides */
+        @media (max-width: 768px) {
+            .card-container { flex-direction: column; align-items: center; }
+            .glass-card { width: 85vw; height: 85vw; max-width: none; max-height: none; }
+            .aqi-value { font-size: 6rem; }
+            .main-headline { font-size: 1.5rem; }
+            .header-top, .footer-text { font-size: 1.1rem; }
         }
 
-        @media (max-width: 768px) {
-            .dashboard-wrapper { height: auto; padding-bottom: 5vh; }
-            .card-container { flex-direction: column; margin-top: 4vh; gap: 5vh; }
-            .glass-card { width: 85vw; height: 85vw; padding: 4vh 5vw; }
-            .header-top { margin-top: 4vh; }
-            .aqi-value { font-size: 22vw; }
-            .footer-container { margin-top: 6vh; flex: none; }
+        /* TV and Large Desktop Adjustments */
+        @media (min-width: 1600px) {
+            .glass-card { width: 450px; height: 450px; }
+            .aqi-value { font-size: 10rem; }
         }
     </style>
 </head>
@@ -163,7 +164,7 @@
                         <span class="metric-label">PM2.5</span>
                         <span class="metric-val" id="in-pm25">--</span>
                     </div>
-                    <div class="metric-item">
+                    <div class="metric-item" style="border-left: 1px solid rgba(158,128,27,0.2);">
                         <span class="metric-label">PM10</span>
                         <span class="metric-val" id="in-pm10">--</span>
                     </div>
@@ -178,7 +179,7 @@
                         <span class="metric-label">PM2.5</span>
                         <span class="metric-val" id="out-pm25">--</span>
                     </div>
-                    <div class="metric-item">
+                    <div class="metric-item" style="border-left: 1px solid rgba(158,128,27,0.2);">
                         <span class="metric-label">PM10</span>
                         <span class="metric-val" id="out-pm10">--</span>
                     </div>
@@ -192,7 +193,6 @@
     </div>
 
     <script>
-        // JS logic remains identical to provide stable functionality
         const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
         const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
         const LAT = "19.0000", LON = "72.8200";
@@ -204,7 +204,6 @@
             if (pm <= 90) return Math.round(100 + (pm - 60) * (100 / 30));
             if (pm <= 120) return Math.round(200 + (pm - 90) * (100 / 30));
             if (pm <= 250) return Math.round(300 + (pm - 120) * (100 / 130));
-            if (pm > 250) return Math.round(400 + (pm - 250) * (100 / 130));
             return 500;
         }
 
@@ -225,22 +224,18 @@
                     const low10 = Math.min(...pm10List);
                     const aqi = calcAQI(low25);
                     document.getElementById('in-aqi').innerText = aqi;
-                    document.getElementById('in-pm25').innerHTML = `${Math.round(low25)}<span class="metric-unit">µg/m³</span>`;
-                    document.getElementById('in-pm10').innerHTML = `${Math.round(low10)}<span class="metric-unit">µg/m³</span>`;
+                    document.getElementById('in-pm25').innerHTML = Math.round(low25) + '<span class="metric-unit">µg/m³</span>';
+                    document.getElementById('in-pm10').innerHTML = Math.round(low10) + '<span class="metric-unit">µg/m³</span>';
                     const st = document.getElementById('status-text');
-                    if (aqi <= 15) st.innerText = "PRISTINE";
-                    else if (aqi <= 30) st.innerText = "EXCEPTIONAL";
-                    else if (aqi <= 45) st.innerText = "EXCELLENT";
-                    else if (aqi <= 60) st.innerText = "VERY GOOD";
-                    else st.innerText = "GOOD";
+                    st.innerText = aqi <= 15 ? "PRISTINE" : aqi <= 30 ? "EXCEPTIONAL" : aqi <= 45 ? "EXCELLENT" : aqi <= 60 ? "VERY GOOD" : "GOOD";
                 }
                 const pRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
                 const pData = await pRes.json();
                 if (pData && pData.list) {
                     const c = pData.list[0].components;
                     document.getElementById('out-aqi').innerText = calcAQI(c.pm2_5);
-                    document.getElementById('out-pm25').innerHTML = `${Math.round(c.pm2_5)}<span class="metric-unit">µg/m³</span>`;
-                    document.getElementById('out-pm10').innerHTML = `${Math.round(c.pm10)}<span class="metric-unit">µg/m³</span>`;
+                    document.getElementById('out-pm25').innerHTML = Math.round(c.pm2_5) + '<span class="metric-unit">µg/m³</span>';
+                    document.getElementById('out-pm10').innerHTML = Math.round(c.pm10) + '<span class="metric-unit">µg/m³</span>';
                 }
             } catch (e) { console.error(e); }
         }
