@@ -5,11 +5,11 @@
     <title>One Lodha Place | Air Quality Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="300"> 
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #9e801b;
-            --text-greyish: #666666;
+            --text-greyish: #555555;
             --glass-bg: rgba(255, 255, 255, 0.65);
             --glass-border: rgba(255, 255, 255, 0.8);
         }
@@ -26,85 +26,78 @@
 
         .dashboard-wrapper {
             width: 90vw;
+            height: 94vh; 
             max-width: 1300px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-between;
+            padding: 1vh 0;
         }
 
+        /* LIVE AIR QUALITY: Tighter tracking and margin */
         .header-top { 
-            font-size: clamp(0.7rem, 0.9vw, 1rem); 
-            letter-spacing: 0.6vw; text-transform: uppercase; 
-            margin-bottom: 3vh; font-weight: 400; 
-            opacity: 0.8;
+            font-size: clamp(1.1rem, 1.4vw, 1.6rem); 
+            letter-spacing: 0.3vw; 
+            text-transform: uppercase; 
+            font-weight: 500; 
+            margin-top: 0.5vh;
         }
 
-        /* Alignment containers */
-        .invisible-card-span {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: transparent;
-        }
-
+        /* MAIN HEADLINE: Weight decreased by 20% (from 500 to 400) */
         .main-headline { 
-            font-size: clamp(1.6rem, 2.8vw, 3.2rem); 
-            font-weight: 300; text-transform: uppercase; 
-            letter-spacing: 0.2vw;
-            margin-bottom: 6vh;
+            font-size: clamp(1.8rem, 3.2vw, 3.8rem); 
+            font-weight: 400; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05vw;
             text-align: center;
-            color: var(--text-greyish);
+            margin: 1vh 0;
             white-space: nowrap;
         }
-        
-        /* Status Text - Locked to Greyish */
-        #status-text { 
-            font-weight: 500; 
-            color: var(--text-greyish);
-        }
+        #status-text { font-weight: 600; } /* Status slightly heavier than headline for contrast */
 
         .card-container { 
             display: flex; 
-            gap: 4vw; 
+            gap: 3vw; 
             width: 100%;
             justify-content: center;
+            flex: 1;
+            align-items: center;
         }
 
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 45px;
+            border-radius: 50px;
             flex: 1;
-            aspect-ratio: 1.1 / 1; 
-            max-width: 550px;
+            height: 62vh;
+            max-width: 580px;
             display: flex; flex-direction: column; 
             justify-content: space-between;
             align-items: center; 
             padding: 6vh 2vw;
             border: 1px solid var(--glass-border);
             box-sizing: border-box;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.06);
         }
 
         .card-label { 
-            font-size: clamp(1.3rem, 2vw, 2.1rem); 
-            letter-spacing: 0.4vw; 
+            font-size: clamp(1.4rem, 2.2vw, 2.4rem); 
+            letter-spacing: 0.3vw; 
             text-transform: uppercase; 
-            font-weight: 300;
-            color: #555;
+            font-weight: 400;
         }
         
         .aqi-value { 
-            font-size: clamp(6rem, 13vw, 16rem); 
+            font-size: clamp(8.5rem, 16vw, 19rem); 
             font-weight: 200; color: var(--gold); 
-            line-height: 0.7; margin: 1vh 0; letter-spacing: -0.6vw; 
+            line-height: 0.7; margin: 0; letter-spacing: -0.8vw; 
         }
 
         .metrics-box {
             display: flex; width: 85%; 
             border: 1px solid rgba(158, 128, 27, 0.15);
-            border-radius: 20px; padding: 2.5vh 0;
+            border-radius: 25px; padding: 3vh 0;
             background: rgba(255,255,255,0.4);
         }
 
@@ -114,17 +107,17 @@
             width: 1px; background: rgba(158, 128, 27, 0.2);
         }
         
-        .metric-label { font-size: clamp(0.7rem, 0.9vw, 1.1rem); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; opacity: 0.6; }
-        .metric-val { font-size: clamp(1.4rem, 2vw, 2.4rem); font-weight: 400; color: var(--gold); }
-        .metric-unit { font-size: 0.45em; opacity: 0.7; margin-left: 4px; }
+        .metric-label { font-size: clamp(0.8rem, 1vw, 1.2rem); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 500; }
+        .metric-val { font-size: clamp(1.6rem, 2.4vw, 2.8rem); font-weight: 500; color: var(--gold); }
+        .metric-unit { font-size: 0.45em; opacity: 0.8; margin-left: 4px; }
 
+        /* ONE LODHA PLACE: 100% tighter (negative tracking) and Heavy Weight */
         .footer-text { 
-            margin-top: 7vh;
-            letter-spacing: 0.5vw; 
+            font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02vw; 
             text-transform: uppercase; 
-            font-size: clamp(0.9rem, 1.2vw, 1.3rem);
-            font-weight: 400;
-            opacity: 0.6;
+            margin-bottom: 0.5vh;
             text-align: center;
             white-space: nowrap;
         }
@@ -132,12 +125,10 @@
 </head>
 <body>
 
-    <div class="header-top">Live Air Quality</div>
-    
     <div class="dashboard-wrapper">
-        <div class="invisible-card-span">
-            <div class="main-headline">Indoor Air Quality is <b id="status-text">Detecting...</b></div>
-        </div>
+        <div class="header-top">Live Air Quality</div>
+        
+        <div class="main-headline">Indoor Air Quality is <b id="status-text">Detecting...</b></div>
 
         <div class="card-container">
             <div class="glass-card">
@@ -171,9 +162,7 @@
             </div>
         </div>
 
-        <div class="invisible-card-span">
-            <div class="footer-text">One Lodha Place, Mumbai</div>
-        </div>
+        <div class="footer-text">One Lodha Place, Mumbai</div>
     </div>
 
     <script>
@@ -216,8 +205,6 @@
                     document.getElementById('in-pm10').innerHTML = `${Math.round(low10)}<span class="metric-unit">µg/m³</span>`;
                     
                     const st = document.getElementById('status-text');
-                    
-                    // All states remain in the same greyish brand color
                     if (aqi <= 15) st.innerText = "PRISTINE";
                     else if (aqi <= 30) st.innerText = "EXCEPTIONAL";
                     else if (aqi <= 45) st.innerText = "EXCELLENT";
