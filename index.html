@@ -19,87 +19,42 @@
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden;
-            color: var(--text-greyish);
+            overflow: hidden; color: var(--text-greyish);
         }
 
-        /* Scaled Header */
-        .header-top { 
-            font-size: 1.1em; letter-spacing: 9px; text-transform: uppercase; 
-            color: var(--text-greyish); margin-bottom: 8px; font-weight: 400;
-        }
+        .header-top { font-size: 1.1em; letter-spacing: 9px; text-transform: uppercase; margin-bottom: 8px; font-weight: 400; }
+        .main-headline { font-size: 3.2em; font-weight: 300; text-transform: uppercase; letter-spacing: 15px; margin-bottom: 60px; text-align: center; }
+        
+        /* The dynamic status part */
+        #status-text { font-weight: 600; color: var(--gold); transition: all 0.5s ease; }
 
-        .main-headline { 
-            font-size: 3.2em; font-weight: 300; text-transform: uppercase; letter-spacing: 15px; 
-            margin-bottom: 60px; color: var(--text-greyish); 
-            text-align: center;
-        }
-        .main-headline b { font-weight: 600; color: var(--text-greyish); }
-
-        /* Scaled Cards */
         .card-container { display: flex; gap: 60px; }
-
         .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-radius: 45px;
-            width: 600px; /* Reduced from 850px */
-            padding: 75px 45px;
-            text-align: center;
-            border: 1.5px solid var(--glass-border);
-            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.04);
+            background: var(--glass-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 45px; width: 600px; padding: 75px 45px; text-align: center;
+            border: 1.5px solid var(--glass-border); box-shadow: 0 20px 70px rgba(0, 0, 0, 0.04);
         }
 
-        .card-label { 
-            font-size: 1.4em; letter-spacing: 9px; text-transform: uppercase; 
-            color: var(--text-greyish); margin-bottom: 30px; font-weight: 400; 
-        }
-        
-        /* Scaled AQI Value */
-        .aqi-value { 
-            font-size: 15.5em; font-weight: 200; color: var(--gold); 
-            line-height: 1; margin: 15px 0 45px 0; letter-spacing: -9px; 
-        }
+        .card-label { font-size: 1.4em; letter-spacing: 9px; text-transform: uppercase; margin-bottom: 30px; font-weight: 400; }
+        .aqi-value { font-size: 15.5em; font-weight: 200; color: var(--gold); line-height: 1; margin: 15px 0 45px 0; letter-spacing: -9px; }
 
-        /* Scaled Metrics Box */
         .metrics-box {
-            display: flex;
-            border: 1.5px solid rgba(158, 128, 27, 0.15);
-            border-radius: 22px;
-            padding: 30px 0;
-            margin-top: 30px;
-            background: rgba(255,255,255,0.35);
+            display: flex; border: 1.5px solid rgba(158, 128, 27, 0.15); border-radius: 22px;
+            padding: 30px 0; margin-top: 30px; background: rgba(255,255,255,0.35);
         }
-
         .metric-item { flex: 1; position: relative; }
-        .metric-item:first-child::after {
-            content: ""; position: absolute; right: 0; top: 15%; height: 70%;
-            width: 2px; background: rgba(158, 128, 27, 0.1);
-        }
-        
-        .metric-label { 
-            font-size: 1.1em; text-transform: uppercase; letter-spacing: 4px; 
-            color: var(--text-greyish); display: block; margin-bottom: 8px; 
-        }
-
+        .metric-item:first-child::after { content: ""; position: absolute; right: 0; top: 15%; height: 70%; width: 2px; background: rgba(158, 128, 27, 0.1); }
+        .metric-label { font-size: 1.1em; text-transform: uppercase; letter-spacing: 4px; display: block; margin-bottom: 8px; }
         .metric-val { font-size: 2.5em; font-weight: 400; color: var(--gold); }
-        .metric-unit { 
-            font-size: 0.5em; color: var(--gold); opacity: 0.8;
-            margin-left: 6px; font-weight: 300; 
-        }
+        .metric-unit { font-size: 0.5em; color: var(--gold); opacity: 0.8; margin-left: 6px; font-weight: 300; }
 
-        /* Scaled Footer */
-        .footer { 
-            position: absolute; bottom: 60px; letter-spacing: 12px; 
-            text-transform: uppercase; color: var(--text-greyish); font-size: 1.3em; 
-        }
+        .footer { position: absolute; bottom: 60px; letter-spacing: 12px; text-transform: uppercase; font-size: 1.3em; }
     </style>
 </head>
 <body>
 
-    <div class="header-top">Live AQI</div>
-    <div class="main-headline">Indoor Air Quality is <b id="status-text">Excellent</b></div>
+    <div class="header-top">Live Air Quality</div>
+    <div class="main-headline">Indoor Air Quality is <b id="status-text">Detecting...</b></div>
 
     <div class="card-container">
         <div class="glass-card">
@@ -138,55 +93,73 @@
     <script>
         const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
         const W_KEY = '9442ebd14169de10c88aacffb7dc7c71';
-        const LAT = "19.0000", LON = "72.8200"; 
-        const DEVICE_IDS = [
-            'd17c469a-1db3-4c73-85ba-8402e658f600', 'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7',
-            'c7b40131-0924-4bdd-82dd-f2643847b39e', '424782d5-5528-43e4-8320-786dac9b62f2',
-            'e484e715-2fea-4480-8b66-1f07e02980fa', '796ebfee-564a-4361-b7d1-90f86c9297ed'
-        ];
+        const LAT = "19.0000", LON = "72.8200";
+        const DEVICE_IDS = ['d17c469a-1db3-4c73-85ba-8402e658f600', 'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7', 'c7b40131-0924-4bdd-82dd-f2643847b39e', '424782d5-5528-43e4-8320-786dac9b62f2', 'e484e715-2fea-4480-8b66-1f07e02980fa', '796ebfee-564a-4361-b7d1-90f86c9297ed'];
 
         function calcAQI(pm) {
             if (pm <= 30) return Math.round(pm * 50 / 30);
             if (pm <= 60) return Math.round(51 + (pm - 30) * (49 / 30));
-            if (pm <= 90) return Math.round(101 + (pm - 60) * (99 / 30));
-            return 201;
+            return 101;
         }
 
         async function updateData() {
             try {
+                // Fetch Internal
                 const fetches = DEVICE_IDS.map(id => fetch(`https://api.kaiterra.com/v1/devices/${id}/top?key=${K_KEY}`).then(r => r.json()));
                 const results = await Promise.allSettled(fetches);
-                let t25 = 0, t10 = 0, count = 0;
+                let pm25List = [], pm10List = [];
+
                 results.forEach(res => {
                     if (res.status === 'fulfilled' && res.value.data) {
                         const d = res.value.data;
-                        t25 += d.find(x => x.param === 'rpm25c').points[0].value;
-                        t10 += d.find(x => x.param === 'rpm10c').points[0].value;
-                        count++;
+                        pm25List.push(d.find(x => x.param === 'rpm25c').points[0].value);
+                        pm10List.push(d.find(x => x.param === 'rpm10c').points[0].value);
                     }
                 });
 
-                if (count > 0) {
-                    const avg25 = Math.round(t25 / count);
-                    const aqi = calcAQI(avg25);
+                if (pm25List.length > 0) {
+                    const lowest25 = Math.min(...pm25List);
+                    const lowest10 = Math.min(...pm10List);
+                    const aqi = calcAQI(lowest25);
+
                     document.getElementById('in-aqi').innerText = aqi;
-                    document.getElementById('in-pm25').innerHTML = `${avg25}<span class="metric-unit">µg/m³</span>`;
-                    document.getElementById('in-pm10').innerHTML = `${Math.round(t10/count)}<span class="metric-unit">µg/m³</span>`;
-                    document.getElementById('status-text').innerText = aqi <= 50 ? "EXCELLENT" : "PRISTINE";
+                    document.getElementById('in-pm25').innerHTML = `${Math.round(lowest25)}<span class="metric-unit">µg/m³</span>`;
+                    document.getElementById('in-pm10').innerHTML = `${Math.round(lowest10)}<span class="metric-unit">µg/m³</span>`;
+                    
+                    // --- NEW SENSITIVE STATUS LOGIC ---
+                    const statusText = document.getElementById('status-text');
+                    
+                    if (aqi <= 15) {
+                        statusText.innerText = "PRISTINE";
+                    } else if (aqi <= 30) {
+                        statusText.innerText = "EXCEPTIONAL";
+                    } else if (aqi <= 45) {
+                        statusText.innerText = "EXCELLENT";
+                    } else if (aqi <= 60) {
+                        statusText.innerText = "VERY GOOD";
+                    } else if (aqi <= 80) {
+                        statusText.innerText = "GOOD";
+                    } else {
+                        statusText.innerText = "HEALTHY";
+                    }
                 }
 
+                // Fetch External (OpenWeather)
                 const pRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${LAT}&lon=${LON}&appid=${W_KEY}`);
                 const pData = await pRes.json();
-                const out25 = Math.round(pData.list[0].components.pm2_5);
-                const out10 = Math.round(pData.list[0].components.pm10);
-                document.getElementById('out-aqi').innerText = calcAQI(out25);
-                document.getElementById('out-pm25').innerHTML = `${out25}<span class="metric-unit">µg/m³</span>`;
-                document.getElementById('out-pm10').innerHTML = `${out10}<span class="metric-unit">µg/m³</span>`;
-            } catch (e) { console.error("Update failed"); }
+                if (pData && pData.list) {
+                    const comp = pData.list[0].components;
+                    const out25 = Math.round(comp.pm2_5);
+                    document.getElementById('out-aqi').innerText = calcAQI(out25);
+                    document.getElementById('out-pm25').innerHTML = `${out25}<span class="metric-unit">µg/m³</span>`;
+                    document.getElementById('out-pm10').innerHTML = `${Math.round(comp.pm10)}<span class="metric-unit">µg/m³</span>`;
+                }
+
+            } catch (e) { console.error(e); }
         }
 
-        setInterval(updateData, 60000);
         updateData();
+        setInterval(updateData, 300000);
     </script>
 </body>
 </html>
