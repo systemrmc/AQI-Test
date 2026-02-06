@@ -141,7 +141,7 @@
         const K_KEY = 'nomjPNZHYkGzzP5YIJePqI2cUON67v1pj9JPXb8BpcgnC5VX';
         const GOOGLE_KEY = 'AIzaSyD-sKAUFhaCGFENHqjlyrQfhbgOplhxy-Q'; 
         const LAT = 19.0000, LON = 72.8200;
-        const DEVICE_IDS = ['d17c469a-1db3-4c73-85ba-8402e658f600', 'dd871a66-1d78-4f0f-b4a2-8b145d9b42f7', 'c7b40131-0924-4bdd-82dd-f2643847b39e', '424782d5-5528-43e4-8320-786dac9b62f2', 'e484e715-2fea-4480-8b66-1f07e02980fa', '796ebfee-564a-4361-b7d1-90f86c9297ed'];
+        const DEVICE_IDS = ['dfc123cb-bf24-4654-a51c-1f063abf95be', '031a1e39-d42b-4e20-9861-2a28365f76a3', '9fb4fe83-5340-47ed-af73-3641586d05b8', '85ebf1cd-c9b6-4a3d-b8a7-b028564da156', '98786370-3dde-4a3e-82f9-f8cf2910d217', '46ce3613-b8b8-4ffa-a1bc-7e0ad3eb952a'];                                                                           
 
         function calcAQI(pm) {
             if (pm <= 30) return Math.round(pm * 50 / 30);
@@ -153,29 +153,42 @@
         }
 
         async function updateData() {
-            try {
-                // Internal Sensors
-                const fetches = DEVICE_IDS.map(id => fetch(`https://api.kaiterra.com/v1/devices/${id}/top?key=${K_KEY}`).then(r => r.json()));
+                try {
+                // INTERNAL (Average logic with device availability check)
+                const fetches = DEVICE_IDS.map(id => 
+                    fetch(`https://api.kaiterra.com/v1/devices/${id}/top?key=${K_KEY}`)
+                    .then(r => r.ok ? r.json() : null)
+                    .catch(() => null)
+                );
+                
                 const results = await Promise.allSettled(fetches);
-                let pm25List = [], pm10List = [];
+                let validPM25 = [], validPM10 = [];
+ 
                 results.forEach(res => {
-                    if (res.status === 'fulfilled' && res.value.data) {
-                        const d = res.value.data;
-                        pm25List.push(d.find(x => x.param === 'rpm25c').points[0].value);
-                        pm10List.push(d.find(x => x.param === 'rpm10c').points[0].value);
+                    if (res.status === 'fulfilled' && res.value && res.value.data) {
+                       try {
+                            const p25 = res.value.data.find(x => x.param === 'rpm25c').points[0].value;
+                            const p10 = res.value.data.find(x => x.param === 'rpm10c').points[0].value;
+                            if (p25 !== undefined && p25 !== null) validPM25.push(p25);
+                            if (p10 !== undefined && p10 !== null) validPM10.push(p10);
+                        } catch(e) {}
                     }
                 });
-                if (pm25List.length > 0) {
-                    const low25 = Math.min(...pm25List);
-                    const low10 = Math.min(...pm10List);
-                    const aqi = calcAQI(low25);
+ 
+                if (validPM25.length > 0) {
+                    // Calculating Average instead of Min
+                    const avg25 = validPM25.reduce((a, b) => a + b, 0) / validPM25.length;
+                    const avg10 = validPM10.reduce((a, b) => a + b, 0) / validPM10.length;
+                    
+                    const aqi = calcAQI(avg25);
                     document.getElementById('in-aqi').innerText = aqi;
-                    document.getElementById('in-pm25').innerHTML = Math.round(low25) + '<span class="metric-unit">µg/m³</span>';
-                    document.getElementById('in-pm10').innerHTML = Math.round(low10) + '<span class="metric-unit">µg/m³</span>';
+                    document.getElementById('in-pm25').innerHTML = Math.round(avg25) + '<span class="metric-unit">µg/m³</span>';
+                    document.getElementById('in-pm10').innerHTML = Math.round(avg10) + '<span class="metric-unit">µg/m³</span>';
+                    
                     const st = document.getElementById('status-text');
                     st.innerText = aqi <= 15 ? "PRISTINE" : aqi <= 30 ? "EXCEPTIONAL" : aqi <= 45 ? "EXCELLENT" : aqi <= 60 ? "VERY GOOD" : "GOOD";
-                }
 
+}
                 // External Google API (Corrected to 'ind_cpcb')
                 const gRes = await fetch(`https://airquality.googleapis.com/v1/currentConditions:lookup?key=${GOOGLE_KEY}`, {
                     method: 'POST',
